@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: smartbiz
+    runtime: python
+    plan: starter            # paid plan is required for a persistent disk
+    buildCommand: python3 --version
+    startCommand: python3 server.py
+    healthCheckPath: /
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: TZ
+        value: Africa/Nairobi
+      - key: SMARTBIZ_DATA
+        value: /var/data
+    disk:
+      name: smartbiz-data
+      mountPath: /var/data
+      sizeGB: 1
