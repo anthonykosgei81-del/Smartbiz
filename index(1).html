@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SmartBiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6f2;--card:#fff;--ink:#16241d;--mut:#66756c;--line:#dde3dc;--pri:#1f5c43;--pri2:#e6f0ea;--acc:#e8a915;--bad:#b73a1f;--badbg:#fbe9e4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1713;--card:#17231d;--ink:#e8efe9;--mut:#93a49a;--line:#2a3a31;--pri:#4fb488;--pri2:#1c3328;--badbg:#3a1d16;--bad:#f08a6e}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif;margin:0}
+button,input,select{font:inherit;color:inherit}
+.app{display:flex;min-height:100vh}
+nav{width:200px;background:var(--pri);color:#fff;padding:16px 10px;flex:none;display:flex;flex-direction:column;gap:2px}
+nav .logo{font:800 22px 'Bricolage Grotesque',sans-serif;padding:4px 10px 14px}
+nav button{background:none;border:0;color:#d7ebe0;text-align:left;padding:9px 12px;border-radius:8px;cursor:pointer}
+nav button.on{background:#fff;color:#16241d;font-weight:700}
+nav .sp{flex:1}
+main{flex:1;min-width:0;padding:18px;max-width:1100px}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.top h2{font-size:26px;flex:1}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.stat b{display:block;font:800 21px 'Bricolage Grotesque',sans-serif}.stat span{color:var(--mut);font-size:13px}
+.stat.warn b{color:var(--bad)}.stat.good b{color:var(--pri)}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);font-size:14px}
+th{color:var(--mut);font-weight:500}.r{text-align:right}.wrap{overflow-x:auto}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font-weight:700}
+.btn.g{background:var(--pri2);color:var(--pri)}.btn.d{background:var(--badbg);color:var(--bad)}.btn.s{padding:4px 9px;font-size:13px}
+.btn:focus-visible,nav button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+input,select{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%}
+.pill{display:inline-block;padding:1px 8px;border-radius:99px;font-size:12px;background:var(--pri2);color:var(--pri)}.pill.bad{background:var(--badbg);color:var(--bad)}
+.pos{display:grid;grid-template-columns:1fr 340px;gap:14px}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:10px}
+.prod{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:left;cursor:pointer}
+.prod:disabled{opacity:.45}.prod b{display:block}.prod small{color:var(--mut)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:130px;margin-top:8px}
+.bars div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;font-size:11px;color:var(--mut)}
+.bars i{display:block;width:100%;background:var(--acc);border-radius:4px 4px 0 0;min-height:2px}
+.ov{position:fixed;inset:0;background:#0007;display:flex;align-items:center;justify-content:center;padding:14px;z-index:20}
+.box{background:var(--card);border-radius:12px;padding:18px;width:100%;max-width:400px;max-height:90vh;overflow:auto}
+.box label{display:block;margin:10px 0 3px;color:var(--mut);font-size:13px}
+.login{max-width:360px;margin:12vh auto;padding:20px}.login h1{font-size:38px;color:var(--pri)}
+.rcpt{font-family:ui-monospace,monospace;font-size:13px}.rcpt hr{border:0;border-top:1px dashed var(--mut)}
+.rcpt div{display:flex;justify-content:space-between;gap:8px}
+.row{display:flex;gap:8px;align-items:center}.mut{color:var(--mut)}
+@media(max-width:760px){.app{flex-direction:column}nav{width:auto;flex-direction:row;overflow-x:auto;padding:8px}nav .logo,nav .sp{display:none}nav button{white-space:nowrap}.pos{grid-template-columns:1fr}}
+@media print{body>*:not(#m){display:none!important}.ov{position:static;background:none;padding:0}.box{max-width:none}.noprint{display:none}}
+</style></head><body>
+<div id="root"></div><div id="m"></div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const fmt=n=>'KES '+Number(n||0).toLocaleString('en-KE',{maximumFractionDigits:2});
+const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const addD=(s,n)=>{const x=new Date(s+'T00:00:00');x.setDate(x.getDate()+n);return iso(x)};
+const inP=(d,p)=>{const t=today();return p=='day'?d==t:p=='week'?d>=addD(t,-6)&&d<=t:d.slice(0,7)==t.slice(0,7)};
+let D,S={user:null,view:'dash',branch:'all',cart:[],period:'day',q:'',cust:'',pay:'Cash'};
+function seed(){const p=[['Sugar 1kg','SG001',190,160,40],['Maize flour 2kg','MF002',150,128,60],['Cooking oil 1L','CO003',320,280,25],['Bread','BR004',65,55,30],['Milk 500ml','ML005',60,50,48],['Soap bar','SP006',90,70,5]].map(a=>({id:uid(),name:a[0],sku:a[1],price:a[2],cost:a[3],min:10,q:a[4]}));
+const b=[{id:'b1',name:'Kisumu',loc:'Kisumu CBD'},{id:'b2',name:'Nairobi',loc:'Westlands'}];const st={b1:{},b2:{}};
+p.forEach(x=>{st.b1[x.id]=x.q;st.b2[x.id]=Math.round(x.q/2)});p.forEach(x=>delete x.q);
+return{biz:'My Business',branches:b,products:p,stock:st,sales:[],expenses:[],customers:[],suppliers:[],users:[{id:'u1',name:'Owner',pin:'1234',role:'owner',branch:''},{id:'u2',name:'Manager',pin:'2222',role:'manager',branch:''},{id:'u3',name:'Cashier',pin:'3333',role:'cashier',branch:'b1'}]}}
+D={biz:'',branches:[],products:[],stock:{},sales:[],expenses:[],customers:[],suppliers:[],users:[]};
+const save=()=>{};
+const NAV={dash:'Dashboard',pos:'Sell',products:'Products & stock',expenses:'Expenses',customers:'Customers',suppliers:'Suppliers',reports:'Reports',settings:'Settings'};
+const PERM={owner:Object.keys(NAV),manager:Object.keys(NAV).filter(k=>k!='settings'),cashier:['pos','products','customers']};
+const can=v=>PERM[S.user.role].includes(v), boss=()=>S.user.role!='cashier';
+const bn=id=>(D.branches.find(b=>b.id==id)||{}).name||'—';
+const scope=l=>S.branch=='all'?l:l.filter(x=>x.branch==S.branch);
+const qty=pid=>S.branch=='all'?D.branches.reduce((a,b)=>a+((D.stock[b.id]||{})[pid]||0),0):((D.stock[S.branch]||{})[pid]||0);
+function modal(h){$('#m').innerHTML=h?`<div class="ov" onclick="if(event.target==this)modal()"><div class="box">${h}</div></div>`:''}
+function ask(title,f,cb){window.__cb=cb;modal(`<h3>${title}</h3><form onsubmit="return okf(event)">${f.map(x=>`<label>${x.l}</label>`+(x.o?`<select name="${x.k}">${x.o.map(o=>`<option value="${esc(o[0])}"${o[0]==x.v?' selected':''}>${esc(o[1])}</option>`).join('')}</select>`:`<input name="${x.k}" type="${x.t||'text'}" value="${esc(x.v??'')}" ${x.t=='number'?'step="any" min="0"':''} ${x.r===false?'':'required'}>`)).join('')}<div class="row" style="margin-top:16px"><button class="btn">Save</button><button type="button" class="btn g" onclick="modal()">Cancel</button></div></form>`)}
+function okf(e){e.preventDefault();const o=Object.fromEntries(new FormData(e.target));window.__cb(o);modal();return false}
+function login(){const u=D.users.find(x=>x.id==$('#lu').value);if(u&&u.pin==$('#lp').value){S.user=u;S.branch=u.branch||'all';S.view=PERM[u.role][0];render()}else{$('#le').textContent='Wrong PIN. Try again.'}}
+function render(){
+if(!S.user){$('#root').innerHTML=`<div class="login card"><h1>SmartBiz</h1><p class="mut">Sign in to manage your shops.</p><label>Account</label><select id="lu">${D.users.map(u=>`<option value="${u.id}">${esc(u.name)} (${u.role})</option>`).join('')}</select><label>PIN</label><input id="lp" type="password" inputmode="numeric" onkeydown="if(event.key=='Enter')login()"><p id="le" style="color:var(--bad)"></p><button class="btn" onclick="login()">Sign in</button><p class="mut" style="font-size:13px">Demo PINs: Owner 1234 · Manager 2222 · Cashier 3333</p></div>`;return}
+const v=can(S.view)?S.view:PERM[S.user.role][0];S.view=v;
+$('#root').innerHTML=`<div class="app"><nav><div class="logo">SmartBiz</div>${PERM[S.user.role].map(k=>`<button class="${k==v?'on':''}" onclick="S.view='${k}';render()">${NAV[k]}</button>`).join('')}<div class="sp"></div><button onclick="logoutNow()">Sign out (${esc(S.user.name)})</button></nav><main><div class="top"><h2>${NAV[v]}</h2>${S.user.branch?`<span class="pill">${esc(bn(S.user.branch))}</span>`:`<select style="width:auto" onchange="S.branch=this.value;render()"><option value="all">All branches</option>${D.branches.map(b=>`<option value="${b.id}"${b.id==S.branch?' selected':''}>${esc(b.name)}</option>`).join('')}</select>`}</div>${V[v]()}</main></div>`}
+const tbl=(h,rows,empty)=>rows.length?`<div class="wrap"><table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`:`<p class="mut">${empty}</p>`;
+const profitOf=s=>s.items.reduce((a,i)=>a+(i.price-i.cost)*i.qty,0);
+const V={
+dash(){const ts=scope(D.sales).filter(s=>s.d==today()),te=scope(D.expenses).filter(e=>e.d==today());
+const tot=ts.reduce((a,s)=>a+s.total,0),gp=ts.reduce((a,s)=>a+profitOf(s),0),ex=te.reduce((a,e)=>a+e.amt,0);
+const low=D.products.filter(p=>S.branch!='all'?qty(p.id)<=p.min:D.branches.some(b=>((D.stock[b.id]||{})[p.id]||0)<=p.min));
+const days=[...Array(7)].map((_,i)=>addD(today(),i-6)),vals=days.map(d=>scope(D.sales).filter(s=>s.d==d).reduce((a,s)=>a+s.total,0)),mx=Math.max(...vals,1);
+const owed=D.customers.reduce((a,c)=>a+(c.owed||0),0);
+return`<div class="grid"><div class="stat good"><b>${fmt(tot)}</b><span>Today's sales (${ts.length})</span></div><div class="stat"><b>${fmt(gp)}</b><span>Gross profit today</span></div><div class="stat"><b>${fmt(ex)}</b><span>Today's expenses</span></div><div class="stat ${gp-ex<0?'warn':'good'}"><b>${fmt(gp-ex)}</b><span>Net profit today</span></div><div class="stat"><b>${D.products.length}</b><span>Products</span></div><div class="stat ${low.length?'warn':''}"><b>${low.length}</b><span>Low stock items</span></div><div class="stat"><b>${fmt(owed)}</b><span>Customer credit owed</span></div></div>
+<div class="card"><h3>Last 7 days</h3><div class="bars">${vals.map((x,i)=>`<div><i style="height:${x/mx*100}%"></i>${days[i].slice(8)}</div>`).join('')}</div></div>
+<div class="card"><h3>Low stock alerts</h3>${tbl(['Product','Left'],low.slice(0,8).map(p=>[esc(p.name),`<span class="pill bad">${qty(p.id)}</span>`]),'All stock levels are healthy.')}</div>
+<div class="card"><h3>Recent sales</h3>${tbl(['Time','Branch','Total','Paid by'],[...scope(D.sales)].reverse().slice(0,6).map(s=>[s.d.slice(5)+' '+s.t,esc(bn(s.branch)),fmt(s.total),s.pay]),'No sales yet. Open Sell to record one.')}</div>`},
+pos(){if(S.branch=='all')return`<div class="card">Choose a branch at the top to start selling.</div>`;
+const q=S.q.toLowerCase(),ps=D.products.filter(p=>!q||(p.name+p.sku).toLowerCase().includes(q));
+const tot=S.cart.reduce((a,i)=>a+i.price*i.qty,0);
+return`<div class="pos"><div><input placeholder="Search name or code" value="${esc(S.q)}" oninput="S.q=this.value;render();const e=$('input');e.focus();e.setSelectionRange(99,99)"><div class="prods">${ps.map(p=>`<button class="prod" ${qty(p.id)<1?'disabled':''} onclick="addCart('${p.id}')"><b>${esc(p.name)}</b>${fmt(p.price)}<br><small>${qty(p.id)} in stock</small></button>`).join('')}</div></div>
+<div class="card"><h3>Current sale</h3>${S.cart.length?S.cart.map((i,n)=>`<div class="row" style="margin:8px 0"><span style="flex:1">${esc(i.name)}<br><small class="mut">${fmt(i.price)}</small></span><button class="btn g s" onclick="chg(${n},-1)">−</button><b>${i.qty}</b><button class="btn g s" onclick="chg(${n},1)">+</button></div>`).join(''):'<p class="mut">Tap a product to add it.</p>'}<hr style="border:0;border-top:1px solid var(--line)"><div class="row"><b style="flex:1">Total</b><b style="font-size:20px">${fmt(tot)}</b></div>
+<label class="mut">Payment</label><select onchange="S.pay=this.value;render()">${['Cash','M-Pesa','Credit'].map(x=>`<option${x==S.pay?' selected':''}>${x}</option>`).join('')}</select>
+<label class="mut">Customer ${S.pay=='Credit'?'(required)':'(optional)'}</label><select onchange="S.cust=this.value"><option value="">Walk-in</option>${D.customers.map(c=>`<option value="${c.id}"${c.id==S.cust?' selected':''}>${esc(c.name)}</option>`).join('')}</select>
+<button class="btn" style="width:100%;margin-top:12px" ${S.cart.length?'':'disabled'} onclick="checkout()">Complete sale</button></div></div>`},
+products(){const b=boss();return`<div class="top">${b?`<button class="btn" onclick="editProd()">Add product</button>`:''}</div><div class="card">${tbl(['Product','Code','Price','Cost','Stock',''],D.products.map(p=>[esc(p.name),esc(p.sku),fmt(p.price),fmt(p.cost),`<span class="pill ${qty(p.id)<=p.min?'bad':''}">${qty(p.id)}</span>`,b?`<button class="btn g s" onclick="restock('${p.id}')">Restock</button> <button class="btn g s" onclick="editProd('${p.id}')">Edit</button> <button class="btn d s" onclick="delProd('${p.id}')">Delete</button>`:'']),'No products yet. Add your first product.')}</div>`},
+expenses(){const l=scope(D.expenses);return`<div class="top"><button class="btn" onclick="addExp()">Record expense</button></div><div class="card">${tbl(['Date','Branch','What for','Amount',''],[...l].reverse().map(e=>[e.d,esc(bn(e.branch)),esc(e.note),fmt(e.amt),`<button class="btn d s" onclick="del('expenses','${e.id}')">Remove</button>`]),'No expenses recorded.')}</div>`},
+customers(){return`<div class="top"><button class="btn" onclick="addPerson('customers')">Add customer</button></div><div class="card">${tbl(['Name','Phone','Owes',''],D.customers.map(c=>[esc(c.name),esc(c.phone),c.owed?`<span class="pill bad">${fmt(c.owed)}</span>`:fmt(0),(c.owed?`<button class="btn s" onclick="payDebt('${c.id}')">Receive payment</button> `:'')+(boss()?`<button class="btn d s" onclick="del('customers','${c.id}')">Remove</button>`:'')]),'No customers yet.')}</div>`},
+suppliers(){return`<div class="top"><button class="btn" onclick="addPerson('suppliers')">Add supplier</button></div><div class="card">${tbl(['Name','Phone','Supplies',''],D.suppliers.map(c=>[esc(c.name),esc(c.phone),esc(c.item),`<button class="btn d s" onclick="del('suppliers','${c.id}')">Remove</button>`]),'No suppliers yet.')}</div>`},
+reports(){const p=S.period,ss=scope(D.sales).filter(s=>inP(s.d,p)),ee=scope(D.expenses).filter(e=>inP(e.d,p));
+const rev=ss.reduce((a,s)=>a+s.total,0),gp=ss.reduce((a,s)=>a+profitOf(s),0),ex=ee.reduce((a,e)=>a+e.amt,0),m={};
+ss.forEach(s=>s.items.forEach(i=>{m[i.name]=m[i.name]||{q:0,r:0};m[i.name].q+=i.qty;m[i.name].r+=i.qty*i.price}));
+const pay={};ss.forEach(s=>pay[s.pay]=(pay[s.pay]||0)+s.total);
+return`<div class="top">${[['day','Today'],['week','7 days'],['month','This month']].map(x=>`<button class="btn ${p==x[0]?'':'g'}" onclick="S.period='${x[0]}';render()">${x[1]}</button>`).join('')}<button class="btn g" onclick="window.print()">Print</button></div>
+<div class="grid"><div class="stat"><b>${fmt(rev)}</b><span>Sales (${ss.length})</span></div><div class="stat"><b>${fmt(gp)}</b><span>Gross profit</span></div><div class="stat"><b>${fmt(ex)}</b><span>Expenses</span></div><div class="stat ${gp-ex<0?'warn':'good'}"><b>${fmt(gp-ex)}</b><span>Net profit</span></div></div>
+<div class="card"><h3>Best sellers</h3>${tbl(['Product','Units','Revenue'],Object.entries(m).sort((a,b)=>b[1].r-a[1].r).slice(0,10).map(([n,x])=>[esc(n),x.q,fmt(x.r)]),'No sales in this period.')}</div>
+<div class="card"><h3>By payment method</h3>${tbl(['Method','Total'],Object.entries(pay).map(([k,v])=>[k,fmt(v)]),'No sales in this period.')}</div>
+${S.branch=='all'?`<div class="card"><h3>By branch</h3>${tbl(['Branch','Sales','Profit'],D.branches.map(b=>{const l=ss.filter(s=>s.branch==b.id);return[esc(b.name),fmt(l.reduce((a,s)=>a+s.total,0)),fmt(l.reduce((a,s)=>a+profitOf(s),0))]}),'')}</div>`:''}`},
+settings(){return`<div class="card"><h3>Business</h3><p>${esc(D.biz)}</p><p class="mut">Business code for staff sign-in: <b>${esc(tok.split('.')[0])}</b></p><button class="btn g" onclick="ask('Business name',[{k:'n',l:'Name',v:D.biz}],o=>{D.biz=o.n;save();render()})">Rename</button></div>
+<div class="card"><h3>Branches</h3>${tbl(['Name','Location'],D.branches.map(b=>[esc(b.name),esc(b.loc)]),'')}<button class="btn" style="margin-top:10px" onclick="ask('New branch',[{k:'n',l:'Branch name'},{k:'l',l:'Location'}],o=>{const id=uid();D.branches.push({id,name:o.n,loc:o.l});D.stock[id]={};save();render()})">Add branch</button></div>
+<div class="card"><h3>Staff accounts</h3>${tbl(['Name','Role','Branch',''],D.users.map(u=>[esc(u.name),u.role,u.branch?esc(bn(u.branch)):'All',u.id==S.user.id?'You':`<button class="btn d s" onclick="del('users','${u.id}')">Remove</button>`]),'')}<button class="btn" style="margin-top:10px" onclick="ask('New staff account',[{k:'name',l:'Name'},{k:'pin',l:'PIN (4 digits)',t:'password'},{k:'role',l:'Role',o:[['cashier','Cashier'],['manager','Manager'],['owner','Owner']]},{k:'branch',l:'Branch (cashiers)',o:[['','All branches'],...D.branches.map(b=>[b.id,b.name])]}],o=>{D.users.push({id:uid(),...o});save();render()})">Add staff</button></div>
+<div class="card"><h3>Data</h3><p class="mut">Data is stored in this browser only. Resetting restores the demo data.</p><button class="btn d" onclick="if(confirm('Erase everything and restore demo data?')){D=seed();save();S.user=null;render()}">Reset all data</button></div>`}};
+function addCart(id){const p=D.products.find(x=>x.id==id),i=S.cart.find(x=>x.pid==id);if(i){if(i.qty<qty(id))i.qty++}else S.cart.push({pid:id,name:p.name,price:p.price,cost:p.cost,qty:1});render()}
+function chg(n,d){const i=S.cart[n];i.qty+=d;if(i.qty>qty(i.pid))i.qty=qty(i.pid);if(i.qty<1)S.cart.splice(n,1);render()}
+function checkout(){if(S.pay=='Credit'&&!S.cust){alert('Choose a customer for a credit sale.');return}
+const tot=S.cart.reduce((a,i)=>a+i.price*i.qty,0),n=new Date(),s={id:uid(),no:'R'+String(D.sales.length+1).padStart(4,'0'),branch:S.branch,d:today(),t:n.toTimeString().slice(0,5),items:S.cart,total:tot,pay:S.pay,cust:S.cust,by:S.user.name};
+S.cart.forEach(i=>D.stock[S.branch][i.pid]-=i.qty);
+if(S.pay=='Credit'){const c=D.customers.find(x=>x.id==S.cust);c.owed=(c.owed||0)+tot}
+D.sales.push(s);save();S.cart=[];S.cust='';S.pay='Cash';render();receipt(s)}
+function receipt(s){modal(`<div class="rcpt"><h3 style="text-align:center">${esc(D.biz)}</h3><p style="text-align:center;margin:0">${esc(bn(s.branch))} · ${s.d} ${s.t}</p><p style="text-align:center;margin:0">Receipt ${s.no}</p><hr>${s.items.map(i=>`<div><span>${i.qty} × ${esc(i.name)}</span><span>${fmt(i.qty*i.price)}</span></div>`).join('')}<hr><div><b>TOTAL</b><b>${fmt(s.total)}</b></div><div><span>Paid by</span><span>${s.pay}</span></div><div><span>Served by</span><span>${esc(s.by)}</span></div><p style="text-align:center">Thank you!</p></div><div class="row noprint"><button class="btn" onclick="window.print()">Print receipt</button><button class="btn g" onclick="modal()">Done</button></div>`)}
+function editProd(id){const p=D.products.find(x=>x.id==id)||{};ask(id?'Edit product':'New product',[{k:'name',l:'Name',v:p.name},{k:'sku',l:'Code or barcode',v:p.sku,r:false},{k:'price',l:'Selling price (KES)',t:'number',v:p.price},{k:'cost',l:'Buying cost (KES)',t:'number',v:p.cost},{k:'min',l:'Low-stock level',t:'number',v:p.min??5}],o=>{const x={name:o.name,sku:o.sku,price:+o.price,cost:+o.cost,min:+o.min};if(id)Object.assign(p,x);else{x.id=uid();D.products.push(x);D.branches.forEach(b=>D.stock[b.id][x.id]=0)}save();render()})}
+function delProd(id){if(confirm('Delete this product from all branches?')){D.products=D.products.filter(p=>p.id!=id);save();render()}}
+function restock(id){const br=S.branch=='all'?D.branches[0].id:S.branch;ask('Restock '+D.products.find(p=>p.id==id).name,[{k:'b',l:'Branch',o:D.branches.map(b=>[b.id,b.name]),v:br},{k:'q',l:'Quantity received (negative to correct)',t:'number'}],o=>{D.stock[o.b][id]=Math.max(0,(D.stock[o.b][id]||0)+ +o.q);save();render()})}
+function addExp(){const br=S.branch=='all'?D.branches[0].id:S.branch;ask('Record expense',[{k:'branch',l:'Branch',o:D.branches.map(b=>[b.id,b.name]),v:br},{k:'note',l:'What for (rent, power, transport)'},{k:'amt',l:'Amount (KES)',t:'number'}],o=>{D.expenses.push({id:uid(),d:today(),branch:o.branch,note:o.note,amt:+o.amt});save();render()})}
+function addPerson(k){ask(k=='customers'?'New customer':'New supplier',[{k:'name',l:'Name'},{k:'phone',l:'Phone',r:false}].concat(k=='suppliers'?[{k:'item',l:'Supplies',r:false}]:[]),o=>{D[k].push({id:uid(),...o,owed:0});save();render()})}
+function payDebt(id){const c=D.customers.find(x=>x.id==id);ask('Payment from '+c.name,[{k:'a',l:'Amount (owes '+fmt(c.owed)+')',t:'number',v:c.owed}],o=>{c.owed=Math.max(0,c.owed-+o.a);save();render()})}
+function del(k,id){if(confirm('Remove this entry?')){D[k]=D[k].filter(x=>x.id!=id);save();render()}}
+render();
+</script>
+<script>
+/* ---- SmartBiz v2: talks to the Python server ---- */
+let tok='';try{tok=localStorage.getItem('sb_tok')||''}catch(e){}
+const setTok=t=>{tok=t;try{t?localStorage.setItem('sb_tok',t):localStorage.removeItem('sb_tok')}catch(e){}};
+async function api(m,p,b){const r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',Authorization:'Bearer '+tok},body:b?JSON.stringify(b):undefined});
+ const j=await r.json().catch(()=>({}));if(r.status==401&&tok&&p!='/login'){setTok('');S.user=null;render()}if(!r.ok)throw new Error(j.error||'Request failed');return j}
+async function sync(){const j=await api('GET','/state');Object.assign(D,j);S.user=j.me;render()}
+async function act(fn){try{await fn();await sync()}catch(e){alert(e.message)}}
+const _render=render;
+render=function(){if(!S.user){$('#root').innerHTML=loginView();return}
+ _render()};
+S.mode=location.hash=='#signup'?'up':'in';let code0='';try{code0=localStorage.getItem('sb_code')||''}catch(e){}
+const saveCode=c=>{try{localStorage.setItem('sb_code',c)}catch(e){}};
+function loginView(){const sw=m=>`onclick="S.mode='${m}';render();return false"`;
+return S.mode=='up'?`<div class="login card"><h1>SmartBiz</h1><p class="mut">Create your business account.</p><label>Business name</label><input id="sb"><label>Your name</label><input id="su" autocomplete="username"><label>First branch (optional)</label><input id="sbr" placeholder="e.g. Kisumu shop"><label>Choose a PIN (4+ digits)</label><input id="sp" type="password" inputmode="numeric" autocomplete="new-password"><p id="le" style="color:var(--bad)"></p><button class="btn" onclick="signup()">Create account</button><p><a href="#" ${sw('in')}>I already have an account</a></p></div>`
+:`<div class="login card"><h1>SmartBiz</h1><p class="mut">Sign in to manage your shops.</p><label>Business code</label><input id="lc" value="${esc(code0)}" autocapitalize="none"><label>Name</label><input id="lu" autocomplete="username"><label>PIN</label><input id="lp" type="password" inputmode="numeric" autocomplete="current-password" onkeydown="if(event.key=='Enter')login()"><p id="le" style="color:var(--bad)"></p><button class="btn" onclick="login()">Sign in</button><p><a href="#signup" ${sw('up')}>Create a business account</a></p></div>`}
+async function signup(){try{const j=await api('POST','/signup',{biz:$('#sb').value,name:$('#su').value,branch:$('#sbr').value,pin:$('#sp').value});setTok(j.token);saveCode(j.code);await sync();S.branch='all';S.view='dash';render();modal(`<h3>Your business code: ${j.code}</h3><p>Staff sign in with this code plus their own name and PIN. Write it down.</p><button class="btn" onclick="modal()">Continue</button>`)}catch(e){$('#le').textContent=e.message}}
+async function login(){try{const c=$('#lc').value.trim().toLowerCase(),j=await api('POST','/login',{code:c,name:$('#lu').value,pin:$('#lp').value});setTok(j.token);saveCode(c);await sync();S.branch=S.user.branch||'all';S.view=PERM[S.user.role][0];render()}catch(e){$('#le').textContent=e.message}}
+function logoutNow(){setTok('');S.user=null;S.cart=[];render()}
+checkout=async function(){try{const j=await api('POST','/sales',{branch:S.branch,pay:S.pay,cust:S.cust,items:S.cart.map(i=>({pid:i.pid,qty:i.qty}))});S.cart=[];S.cust='';S.pay='Cash';await sync();receipt(j.sale)}catch(e){alert(e.message)}};
+editProd=function(id){const p=D.products.find(x=>x.id==id)||{};ask(id?'Edit product':'New product',[{k:'name',l:'Name',v:p.name},{k:'sku',l:'Code or barcode',v:p.sku,r:false},{k:'price',l:'Selling price (KES)',t:'number',v:p.price},{k:'cost',l:'Buying cost (KES)',t:'number',v:p.cost},{k:'min',l:'Low-stock level',t:'number',v:p.min??5}],o=>act(()=>api(id?'PUT':'POST','/products'+(id?'/'+id:''),o)))};
+delProd=function(id){if(confirm('Delete this product from all branches?'))act(()=>api('DELETE','/products/'+id))};
+restock=function(id){const br=S.branch=='all'?D.branches[0].id:S.branch;ask('Restock '+D.products.find(p=>p.id==id).name,[{k:'branch',l:'Branch',o:D.branches.map(b=>[b.id,b.name]),v:br},{k:'qty',l:'Quantity received (negative to correct)',t:'number'}],o=>act(()=>api('POST','/restock',{...o,product:id})))};
+addExp=function(){const br=S.branch=='all'?D.branches[0].id:S.branch;ask('Record expense',[{k:'branch',l:'Branch',o:D.branches.map(b=>[b.id,b.name]),v:br},{k:'note',l:'What for (rent, power, transport)'},{k:'amt',l:'Amount (KES)',t:'number'}],o=>act(()=>api('POST','/expenses',o)))};
+addPerson=function(k){ask(k=='customers'?'New customer':'New supplier',[{k:'name',l:'Name'},{k:'phone',l:'Phone',r:false}].concat(k=='suppliers'?[{k:'item',l:'Supplies',r:false}]:[]),o=>act(()=>api('POST','/'+k,o)))};
+payDebt=function(id){const c=D.customers.find(x=>x.id==id);ask('Payment from '+c.name,[{k:'amt',l:'Amount (owes '+fmt(c.owed)+')',t:'number',v:c.owed}],o=>act(()=>api('POST','/customers/'+id+'/pay',o)))};
+del=function(k,id){if(confirm('Remove this entry?'))act(()=>api('DELETE','/'+k+'/'+id))};
+V.settings=function(){return`<div class="card"><h3>Business</h3><p>${esc(D.biz)}</p><p class="mut">Business code for staff sign-in: <b>${esc(tok.split('.')[0])}</b></p><button class="btn g" onclick="ask('Business name',[{k:'name',l:'Name',v:D.biz}],o=>act(()=>api('POST','/business',o)))">Rename</button></div>
+<div class="card"><h3>Branches</h3>${tbl(['Name','Location'],D.branches.map(b=>[esc(b.name),esc(b.loc)]),'')}<button class="btn" style="margin-top:10px" onclick="ask('New branch',[{k:'name',l:'Branch name'},{k:'loc',l:'Location',r:false}],o=>act(()=>api('POST','/branches',o)))">Add branch</button></div>
+<div class="card"><h3>Staff accounts</h3>${tbl(['Name','Role','Branch',''],D.users.map(u=>[esc(u.name),u.role,u.branch?esc(bn(u.branch)):'All',u.id==S.user.id?'You':`<button class="btn d s" onclick="del('users','${u.id}')">Remove</button>`]),'')}<button class="btn" style="margin-top:10px" onclick="ask('New staff account',[{k:'name',l:'Name'},{k:'pin',l:'PIN (4+ characters)',t:'password'},{k:'role',l:'Role',o:[['cashier','Cashier'],['manager','Manager'],['owner','Owner']]},{k:'branch',l:'Branch (cashiers)',o:[['','All branches'],...D.branches.map(b=>[b.id,b.name])]}],o=>act(()=>api('POST','/users',o)))">Add staff</button></div>
+<div class="card"><h3>My account</h3><button class="btn g" onclick="ask('Change PIN',[{k:'old',l:'Current PIN',t:'password'},{k:'new',l:'New PIN',t:'password'}],o=>act(()=>api('POST','/me/pin',o)))">Change my PIN</button></div>`};
+window.__boot=1;
+if(tok){sync().then(()=>{S.branch=S.user.branch||'all';S.view=PERM[S.user.role][0];render()}).catch(()=>{setTok('');render()})}else render();
+</script>
+</body></html>
